@@ -1,0 +1,30 @@
+# Environment variables (als je deze later gebruikt)
+.env
+.env.local
+.env.production
+
+# Node modules (als je later npm gebruikt)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Optional: Firebase config (alleen als je een aparte config file maakt)
+# firebase-config.js
+# config.js
+
+# Build output (als je later een build proces hebt)
+dist/
+build/

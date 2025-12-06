@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA4 Training Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .session-banner {
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            padding: 20px 30px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .session-pre {
+            background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+            color: white;
+        }
+
+        .session-post {
+            background: linear-gradient(135deg, #3f582d 0%, #2d4020 100%);
+            color: white;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #2C2C2C;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .session-code {
+            background: #6e0038;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .leaderboard-container {
+                order: -1;
+            }
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        .leaderboard-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        h2 {
+            color: #2C2C2C;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666666;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+        }
+
+        .name-input-screen, .quiz-screen, .result-screen {
+            display: none;
+        }
+
+        .name-input-screen.active, .quiz-screen.active, .result-screen.active {
+            display: block;
+        }
+
+        .input-group {
+            margin: 30px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #2C2C2C;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #DEDEDE;
+            border-radius: 4px;
+            font-size: 1.1em;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6e0038;
+        }
+
+        .btn {
+            background: #6e0038;
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            font-size: 1.05em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #540028;
+        }
+
+        .btn:disabled {
+            background: #CCC;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            background: #E8E8E8;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #6e0038;
+            height: 100%;
+            transition: width 0.4s ease;
+        }
+
+        .question-card {
+            background: #FAFAFA;
+            padding: 40px;
+            border-radius: 4px;
+            margin: 24px 0;
+        }
+
+        .question-number {
+            color: #6e0038;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #2C2C2C;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .options {
+            display: grid;
+            gap: 16px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #DEDEDE;
+            padding: 20px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.05em;
+            color: #4A4A4A;
+            line-height: 1.6;
+        }
+
+        .option:hover {
+            border-color: #6e0038;
+            background: #FAFAFA;
+        }
+
+        .option.selected {
+            border-color: #6e0038;
+            background: #fde9f2;
+        }
+
+        .option.correct {
+            border-color: #3f582d;
+            background: #eef3ea;
+            color: #2d4020;
+        }
+
+        .option.incorrect {
+            border-color: #C83737;
+            background: #FBEAEA;
+            color: #8B2020;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .feedback {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 4px;
+            display: none;
+            line-height: 1.7;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #eef3ea;
+            color: #2d4020;
+            border-left: 4px solid #3f582d;
+        }
+
+        .feedback.incorrect {
+            background: #FBEAEA;
+            color: #8B2020;
+            border-left: 4px solid #C83737;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 16px;
+        }
+
+        .btn-secondary {
+            background: #6C6C6C;
+        }
+
+        .btn-secondary:hover {
+            background: #5A5A5A;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard {
+            margin-top: 20px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #FAFAFA;
+            border-radius: 4px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .leaderboard-item.rank-1 {
+            background: #FFF8E1;
+            border-left-color: #FFD700;
+        }
+
+        .leaderboard-item.rank-2 {
+            background: #F5F5F5;
+            border-left-color: #C0C0C0;
+        }
+
+        .leaderboard-item.rank-3 {
+            background: #FFF3E0;
+            border-left-color: #CD7F32;
+        }
+
+        .leaderboard-item.current-user {
+            border: 2px solid #6e0038;
+            background: #fde9f2;
+        }
+
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            background: #6e0038;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 1.1em;
+        }
+
+        .rank-1 .rank-badge {
+            background: #FFD700;
+            color: #333;
+        }
+
+        .rank-2 .rank-badge {
+            background: #C0C0C0;
+            color: #333;
+        }
+
+        .rank-3 .rank-badge {
+            background: #CD7F32;
+            color: white;
+        }
+
+        .player-info {
+            flex: 1;
+        }
+
+        .player-name {
+            font-weight: 600;
+            color: #2C2C2C;
+            margin-bottom: 4px;
+        }
+
+        .player-progress {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .player-score {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #6e0038;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-playing {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .status-finished {
+            background: #eef3ea;
+            color: #3f582d;
+        }
+
+        .winner-announcement {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 8px;
+            margin: 20px 0;
+            color: white;
+            animation: celebrate 0.6s ease;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .winner-announcement h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .trophy {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #FAFAFA;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #6e0038;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Session Banner -->
+    <div class="session-banner" id="sessionBanner">
+        PRE-TEST
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <img src="https://www.monuta.nl/files/monuta-logo.svg" alt="Monuta" style="height: 40px;">
+            <h1>GA4 Quiz</h1>
+        </div>
+        <div class="session-code"><span id="sessionLabel">Test</span></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Quiz Container -->
+        <div class="quiz-container">
+            <!-- Name Input Screen -->
+            <div class="name-input-screen active">
+                <h2 id="welcomeTitle">Welkom bij de GA4 Quiz!</h2>
+                <p class="subtitle" id="welcomeSubtitle">Vul je naam in om te beginnen.</p>
+
+                <div class="input-group">
+                    <label for="playerName">Je naam:</label>
+                    <input
+                        type="text"
+                        id="playerName"
+                        placeholder="Bijv. Jan Jansen"
+                        maxlength="30"
+                        autocomplete="name"
+                    />
+                </div>
+
+                <button class="btn" onclick="startQuiz()" id="startBtn" disabled>Start Quiz</button>
+
+                <div style="margin-top: 30px; padding: 20px; background: #FFF8E1; border-radius: 4px; border-left: 4px solid #FFD700;">
+                    <strong>💡 Belangrijk:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li><span id="sessionInstruction">Dit is de pre-test vóór de training</span></li>
+                        <li>15 vragen over Google Analytics 4</li>
+                        <li>Gebruik dezelfde naam in beide tests voor progressie tracking</li>
+                        <li>Je krijgt directe feedback bij elke vraag</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div class="quiz-screen">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-number" id="questionNumber"></div>
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options" id="optionsContainer"></div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn" onclick="nextQuestion()" id="nextBtn" style="display: none;">Volgende Vraag</button>
+                    <button class="btn" onclick="finishQuiz()" id="finishBtn" style="display: none;">Bekijk Resultaten</button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen">
+                <div id="winnerSection"></div>
+
+                <h2>Je Resultaten</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="finalScore">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="finalPercentage">0%</div>
+                        <div class="stat-label">Percentage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="finalRank">-</div>
+                        <div class="stat-label">Positie</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">Bekijk het volledige leaderboard rechts →</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Container -->
+        <div class="leaderboard-container">
+            <h2>🏆 Leaderboard</h2>
+            <p class="subtitle" style="font-size: 0.95em;">Live ranglijst</p>
+            <div class="leaderboard" id="leaderboard">
+                <div style="text-align: center; padding: 40px; color: #999;">
+                    <p>Wachten op spelers...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quiz-session.js"></script>
+</body>
+</html>
