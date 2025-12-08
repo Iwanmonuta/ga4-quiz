@@ -211,15 +211,15 @@ const quizQuestions = [
         explanation: "GA4 data processing duurt 24-48 uur voor standard properties. Gedurende deze tijd kan de data in rapporten nog veranderen. Voor betrouwbare 'finale' cijfers is het verstandig om 24-48 uur te wachten na afloop van een dag. GA360 heeft snellere processing (vaak binnen 4 uur)."
     },
     {
-        question: "Wat is het belangrijkste verschil tussen 'Events' en 'Key Events' in GA4?",
+        question: "Hoe activeer je DebugView in GA4 om je event tracking te testen?",
         options: [
-            "Key Events worden anders gemeten en kosten extra",
-            "Een Key Event is een Event dat je markeert als belangrijk; het krijgt speciale behandeling in rapporten en Google Ads",
-            "Key Events zijn automatisch, Events moet je zelf aanmaken",
-            "Er is geen verschil, het is alleen een andere naam"
+            "DebugView staat altijd automatisch aan",
+            "Via Google Analytics Debugger Chrome extensie, GTM Preview mode, of debug_mode parameter",
+            "Alleen via de GA4 Admin interface",
+            "Door 'test mode' aan te zetten in je website code"
         ],
         correct: 1,
-        explanation: "Een Key Event (voorheen 'Conversion' genoemd) is een regulier Event dat je markeert als belangrijk voor je business. Key Events krijgen speciale metrics (User Key Event Rate, Session Key Event Rate), verschijnen prominenter in rapporten, en kunnen worden gebruikt voor Google Ads optimalisatie. Je kunt maximaal 30 Key Events per property hebben."
+        explanation: "DebugView kun je activeren op 3 manieren: 1) Google Analytics Debugger Chrome extensie installeren, 2) Google Tag Manager Preview mode gebruiken, of 3) handmatig debug_mode parameter toevoegen aan events. DebugView toont dan real-time events van je specifieke device, zodat je tracking kunt testen en debuggen voordat je live gaat."
     }
 ];
 
