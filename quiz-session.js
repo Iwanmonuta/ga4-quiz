@@ -165,6 +165,61 @@ const quizQuestions = [
         ],
         correct: 1,
         explanation: "Een conversie pixel (zoals Facebook Pixel, LinkedIn Insight Tag) is een kleine afbeelding die wordt geladen bij een conversie. GA4 gebruikt een modernere, event-based aanpak met JavaScript die veel rijkere data verzamelt en flexibeler is dan traditionele pixels."
+    },
+    {
+        question: "Wanneer gebruikt GA4 'sampling' bij het tonen van data?",
+        options: [
+            "Altijd, bij elke report",
+            "Nooit, GA4 gebruikt geen sampling",
+            "Bij Explore rapporten met grote datasets; Standard Reports samplen niet tot 10M events/dag",
+            "Alleen bij gratis accounts"
+        ],
+        correct: 2,
+        explanation: "GA4 Standard Reports gebruiken geen sampling tot 10 miljoen events per dag. Explore rapporten kunnen wel sampling toepassen bij grote datasets of complexe queries. GA360 gebruikers krijgen hogere sampling thresholds."
+    },
+    {
+        question: "Wat is 'Behavioral Modeling' in GA4 en waarom wordt het gebruikt?",
+        options: [
+            "Een manier om gebruikersgedrag te voorspellen",
+            "Machine learning die de gaps vult van gebruikers die tracking weigeren, gebaseerd op vergelijkbare gebruikers",
+            "Een functie om A/B tests te analyseren",
+            "Een methode om bot traffic te filteren"
+        ],
+        correct: 1,
+        explanation: "Behavioral Modeling gebruikt machine learning om het gedrag van gebruikers die cookies weigeren te schatten, gebaseerd op vergelijkbare gebruikers die wel tracking accepteren. Dit helpt om nauwkeurigere data te krijgen ondanks consent mode en privacy restricties."
+    },
+    {
+        question: "Welke SQL functie moet je gebruiken om event parameters uit GA4 BigQuery data te halen?",
+        options: [
+            "JOIN",
+            "UNNEST",
+            "EXTRACT",
+            "PARSE"
+        ],
+        correct: 1,
+        explanation: "UNNEST is de functie die je nodig hebt om event_params (en andere repeated/nested fields) in GA4 BigQuery export te 'uitpakken'. Bijvoorbeeld: SELECT (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location') AS page."
+    },
+    {
+        question: "Hoe lang duurt het voordat GA4 data 'definitief' is en niet meer verandert?",
+        options: [
+            "Real-time (binnen seconden)",
+            "4 uur",
+            "24-48 uur",
+            "7 dagen"
+        ],
+        correct: 2,
+        explanation: "GA4 data processing duurt 24-48 uur voor standard properties. Gedurende deze tijd kan de data in rapporten nog veranderen. Voor betrouwbare 'finale' cijfers is het verstandig om 24-48 uur te wachten na afloop van een dag. GA360 heeft snellere processing (vaak binnen 4 uur)."
+    },
+    {
+        question: "Wat is het belangrijkste verschil tussen 'Events' en 'Key Events' in GA4?",
+        options: [
+            "Key Events worden anders gemeten en kosten extra",
+            "Een Key Event is een Event dat je markeert als belangrijk; het krijgt speciale behandeling in rapporten en Google Ads",
+            "Key Events zijn automatisch, Events moet je zelf aanmaken",
+            "Er is geen verschil, het is alleen een andere naam"
+        ],
+        correct: 1,
+        explanation: "Een Key Event (voorheen 'Conversion' genoemd) is een regulier Event dat je markeert als belangrijk voor je business. Key Events krijgen speciale metrics (User Key Event Rate, Session Key Event Rate), verschijnen prominenter in rapporten, en kunnen worden gebruikt voor Google Ads optimalisatie. Je kunt maximaal 30 Key Events per property hebben."
     }
 ];
 
