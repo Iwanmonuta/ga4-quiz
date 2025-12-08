@@ -227,6 +227,37 @@ const quizQuestions = [
 const urlParams = new URLSearchParams(window.location.search);
 const sessionType = urlParams.get('session') || 'pre';
 
+// Shuffle function (Fisher-Yates algorithm)
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Prepare questions based on session type
+let processedQuestions = quizQuestions.map(q => ({...q})); // Deep copy
+
+if (sessionType === 'post') {
+    // POST-TEST: Shuffle questions
+    processedQuestions = shuffleArray(processedQuestions);
+
+    // Shuffle answers for each question and track correct answer
+    processedQuestions = processedQuestions.map(question => {
+        const correctAnswer = question.options[question.correct];
+        const shuffledOptions = shuffleArray(question.options);
+        const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
+
+        return {
+            ...question,
+            options: shuffledOptions,
+            correct: newCorrectIndex
+        };
+    });
+}
+
 // Game State
 let currentQuestion = 0;
 let score = 0;
@@ -276,7 +307,7 @@ function startQuiz() {
         name: playerName,
         score: 0,
         currentQuestion: 0,
-        totalQuestions: quizQuestions.length,
+        totalQuestions: processedQuestions.length,
         status: 'playing',
         startedAt: Date.now()
     };
@@ -292,14 +323,14 @@ function startQuiz() {
 
 // Show Question
 function showQuestion() {
-    const question = quizQuestions[currentQuestion];
-    const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+    const question = processedQuestions[currentQuestion];
+    const progress = ((currentQuestion + 1) / processedQuestions.length) * 100;
 
     // Update progress bar
     document.getElementById('progressBar').style.width = progress + '%';
 
     // Update question info
-    document.getElementById('questionNumber').textContent = `Vraag ${currentQuestion + 1} van ${quizQuestions.length}`;
+    document.getElementById('questionNumber').textContent = `Vraag ${currentQuestion + 1} van ${processedQuestions.length}`;
     document.getElementById('questionText').textContent = question.question;
 
     // Create options
@@ -325,7 +356,7 @@ function showQuestion() {
 
 // Select Answer
 function selectAnswer(selectedIndex) {
-    const question = quizQuestions[currentQuestion];
+    const question = processedQuestions[currentQuestion];
     const options = document.querySelectorAll('.option');
 
     // Disable all options
@@ -354,7 +385,7 @@ function selectAnswer(selectedIndex) {
     });
 
     // Show next/finish button
-    if (currentQuestion < quizQuestions.length - 1) {
+    if (currentQuestion < processedQuestions.length - 1) {
         document.getElementById('nextBtn').style.display = 'block';
     } else {
         document.getElementById('finishBtn').style.display = 'block';
@@ -400,9 +431,9 @@ function finishQuiz() {
 
 // Show Results
 function showResults() {
-    const percentage = Math.round((score / quizQuestions.length) * 100);
+    const percentage = Math.round((score / processedQuestions.length) * 100);
 
-    document.getElementById('finalScore').textContent = score + '/' + quizQuestions.length;
+    document.getElementById('finalScore').textContent = score + '/' + processedQuestions.length;
     document.getElementById('finalPercentage').textContent = percentage + '%';
 
     // Get rank from leaderboard
