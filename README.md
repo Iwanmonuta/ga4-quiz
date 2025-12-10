@@ -82,7 +82,7 @@ npx http-server -p 8000
 
 ## 📊 Quiz Features
 
-- ✅ 15 GA4 training vragen (uitgebreid!)
+- ✅ 20 GA4 training vragen (uitgebreid!)
 - ✅ Directe feedback na elk antwoord
 - ✅ Uitleg bij elk antwoord
 - ✅ Score tracking
